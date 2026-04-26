@@ -1,0 +1,13 @@
+order_id,sku,status
+ORD-001,TENT-3P-GRN,processed
+ORD-002,PACK-45L-BLK,processed
+ORD-003,SLEEP-REG-BLU,processed
+ORD-004,JACKET-M-RED,processed
+ORD-005,BOOT-42-BRN,processed
+ORD-006,TENT-3P-GRN,processed
+ORD-007,PACK-45L-BLK,processed
+ORD-008,SLEEP-REG-BLU,processed
+ORD-009,JACKET-M-RED,processed
+ORD-010,BOOT-42-BRN,processed
+ORD-011,TENT-3P-GRN,processed
+ORD-012,UNKNOWN-SKU,processed

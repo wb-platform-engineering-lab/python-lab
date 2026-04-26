@@ -1,0 +1,1 @@
+[2026-04-26 15:27:34] dispatched=8 rejected=4 value=$3359.63

@@ -1,0 +1,4 @@
+=== Meridian Daily Report ===
+Source file : orders.csv
+Total rows  : 12 orders + 1 header
+Status      : processed

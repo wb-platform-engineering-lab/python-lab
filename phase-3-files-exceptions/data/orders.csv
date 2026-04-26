@@ -1,0 +1,13 @@
+order_id,sku,quantity,warehouse,customer_tier,status
+ORD-001,TENT-3P-GRN,2,north,enterprise,pending
+ORD-002,PACK-45L-BLK,1,south,pro,pending
+ORD-003,SLEEP-REG-BLU,5,west,free,pending
+ORD-004,JACKET-M-RED,4,north,enterprise,pending
+ORD-005,BOOT-42-BRN,2,south,pro,pending
+ORD-006,TENT-3P-GRN,1,west,free,pending
+ORD-007,PACK-45L-BLK,3,south,enterprise,cancelled
+ORD-008,SLEEP-REG-BLU,6,north,pro,pending
+ORD-009,JACKET-M-RED,0,north,free,pending
+ORD-010,BOOT-42-BRN,8,west,enterprise,pending
+ORD-011,TENT-3P-GRN,12,north,pro,pending
+ORD-012,UNKNOWN-SKU,2,south,free,pending

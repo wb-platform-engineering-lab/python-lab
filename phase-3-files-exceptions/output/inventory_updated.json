@@ -1,0 +1,22 @@
+{
+  "TENT-3P-GRN": {
+    "stock": 297,
+    "reorder_threshold": 50
+  },
+  "PACK-45L-BLK": {
+    "stock": 87,
+    "reorder_threshold": 30
+  },
+  "SLEEP-REG-BLU": {
+    "stock": 3,
+    "reorder_threshold": 20
+  },
+  "JACKET-M-RED": {
+    "stock": 0,
+    "reorder_threshold": 25
+  },
+  "BOOT-42-BRN": {
+    "stock": 193,
+    "reorder_threshold": 40
+  }
+}

@@ -1,0 +1,5 @@
+order_id,sku,quantity,reason
+ORD-004,JACKET-M-RED,4,out of stock
+ORD-007,PACK-45L-BLK,3,cancelled
+ORD-009,JACKET-M-RED,0,zero quantity
+ORD-012,UNKNOWN-SKU,2,unknown SKU: UNKNOWN-SKU
