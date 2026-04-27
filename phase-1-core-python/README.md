@@ -13,7 +13,7 @@ Meridian receives 2,400 orders per day across three warehouses. Right now, every
 - Is stock available, or does it need to be flagged?
 - What is the end-of-day summary?
 
-These decisions follow rules. Rules are `if` statements. Repeated decisions are loops. Reusable logic is functions. By the end of this phase you will have a script that processes a full day's orders automatically.
+These decisions follow rules. Rules are `if` statements. Repeated decisions are loops. Reusable logic is functions. By the end of this phase you will have written a script that processes a full day's orders automatically.
 
 ---
 
@@ -42,82 +42,98 @@ Python evaluates conditions top to bottom and executes the first branch that is 
 
 **Goal:** Use `if/elif/else` to route orders based on their status and priority.
 
-### Step 1: Read `src/01_control_flow.py`
+### Concept: if / elif / else
+
+Every `if` block has three parts:
+- `if` — the condition that is checked first
+- `elif` — checked only when the `if` above was `False` (you can have as many as you need)
+- `else` — runs when nothing above matched (optional)
+
+Python stops at the **first** matching branch — branches below it are not checked.
 
 ```python
-order = {
-    "order_id": "ORD-00142",
-    "status": "pending",
-    "customer_tier": "enterprise",
-    "quantity": 5,
-}
+order = {"order_id": "ORD-00142", "status": "pending"}
 
 if order["status"] == "cancelled":
-    print(f"{order['order_id']} — skipped (cancelled)")
+    print(f"{order['order_id']} — skipped")         # runs if status is "cancelled"
 elif order["status"] == "shipped":
-    print(f"{order['order_id']} — already shipped, archive it")
+    print(f"{order['order_id']} — archive it")      # runs if status is "shipped"
 elif order["status"] == "pending":
-    print(f"{order['order_id']} — needs processing")
+    print(f"{order['order_id']} — needs processing") # runs if status is "pending"
 else:
-    print(f"{order['order_id']} — unknown status: {order['status']}")
+    print(f"{order['order_id']} — unknown status")  # runs for anything else
 ```
 
-### Step 2: Run it
-
-```bash
-python3 src/01_control_flow.py
-```
-
-Expected output:
-```
-ORD-00142 — needs processing
-enterprise order: flag for priority handling
-quantity 5 is within single-pallet limit
-```
-
-### Step 3: Logical operators
+### Concept: logical operators
 
 Combine conditions with `and`, `or`, `not`:
 
 ```python
-tier     = order["customer_tier"]
-quantity = order["quantity"]
+tier     = "enterprise"
+quantity = 150
 
-# and — both must be True
+# and — BOTH conditions must be True
 if tier == "enterprise" and quantity > 100:
     print("large enterprise order — escalate")
 
-# or — at least one must be True
+# or — AT LEAST ONE condition must be True
 if tier == "enterprise" or tier == "pro":
     print("paid customer — prioritise")
 
-# not — invert a condition
+# not — inverts a condition
 if not order["status"] == "cancelled":
     print("order is active")
 ```
 
-### Step 4: Chained comparisons
+### Concept: chained comparisons
 
-Python lets you chain comparisons naturally:
+Python lets you chain comparisons the way you would write them in maths:
 
 ```python
 quantity = 45
 
 if 10 <= quantity <= 100:
-    print("standard order")          # True for quantities 10–100
+    print("standard order")   # True when quantity is 10, 11, ..., 100
 
 if 0 < quantity < 10:
-    print("small order — combine with next batch")
+    print("small order")      # True when quantity is 1, 2, ..., 9
 ```
 
-### Step 5: The ternary expression
+This is cleaner than writing `quantity >= 10 and quantity <= 100`.
+
+### Concept: the ternary expression
 
 Assign a value based on a condition in one line:
 
 ```python
+# pattern: value_if_true  if  condition  else  value_if_false
 label = "priority" if tier == "enterprise" else "standard"
 print(f"Handling: {label}")
 ```
+
+Use this only when both branches fit on one readable line. For anything more complex, use a full `if/else` block.
+
+### Step 1: Run the demo
+
+```bash
+python3 src/01_control_flow.py
+```
+
+Read through the file and the output. Notice how each case is handled separately, how the loop at the bottom uses `continue` to skip early, and how the early returns keep the logic flat.
+
+### Your turn — exercises
+
+**Option A — interactive exercises (file with assertions)**
+
+```bash
+python3 src/01_control_flow_test.py
+```
+
+Open `src/01_control_flow_test.py`. Replace each `pass` with your implementation. The `assert` statements at the bottom verify your code automatically — a passing run prints `"All checks passed."`. Work through the four functions one at a time.
+
+**Option B — open-ended exercises**
+
+Scroll to the `# YOUR TURN` section at the bottom of `src/01_control_flow.py`. Complete the three exercises there. Run the file after each one to see your output.
 
 ---
 
@@ -125,7 +141,9 @@ print(f"Handling: {label}")
 
 **Goal:** Process every order in a batch using `for` and `while`.
 
-### Step 1: The `for` loop
+### Concept: for loop
+
+A `for` loop runs the indented block once per item. The variable before `in` takes each value in turn:
 
 ```python
 orders = ["ORD-001", "ORD-002", "ORD-003"]
@@ -134,11 +152,11 @@ for order_id in orders:
     print(f"Processing {order_id}")
 ```
 
-A `for` loop runs the indented block once per item. `order_id` takes each value in turn.
+You do not need to track an index or call `next()` yourself — Python does it.
 
-### Step 2: `range()`
+### Concept: range()
 
-When you need to repeat something N times or iterate over a sequence of numbers:
+When you need to repeat something N times or work with a sequence of numbers:
 
 ```python
 for i in range(5):          # 0, 1, 2, 3, 4
@@ -151,25 +169,29 @@ for i in range(0, 100, 10): # 0, 10, 20, ... 90
     print(i)
 ```
 
-### Step 3: `enumerate()` — loop with an index
+`range(start, stop, step)` — stop is **not** included.
+
+### Concept: enumerate() — loop with a position
+
+When you need both the item **and** its index, use `enumerate()`:
 
 ```python
 warehouses = ["north", "south", "west"]
 
 for index, name in enumerate(warehouses):
     print(f"{index + 1}. {name}")
+# 1. north
+# 2. south
+# 3. west
 ```
 
-Output:
-```
-1. north
-2. south
-3. west
-```
+`enumerate()` returns `(index, item)` pairs. Unpack them directly in the `for` line.
 
-Use `enumerate()` any time you need both the item and its position. Never write `range(len(x))`.
+> **Rule:** never write `for i in range(len(x))` when you need an index — use `enumerate(x)` instead.
 
-### Step 4: `zip()` — loop over two lists together
+### Concept: zip() — loop over two lists together
+
+When you need to pair items from two lists:
 
 ```python
 skus       = ["TENT-3P-GRN", "PACK-45L-BLK", "SLEEP-REG-BLU"]
@@ -179,28 +201,28 @@ for sku, qty in zip(skus, quantities):
     print(f"  {sku}: {qty} units")
 ```
 
-### Step 5: `break` and `continue`
+`zip()` stops at the shorter list. If the lists may be different lengths, you will need `itertools.zip_longest` — but for now, assume they match.
+
+### Concept: break and continue
 
 ```python
 orders = ["ORD-001", "ORD-002", "CANCELLED", "ORD-004", "ORD-005"]
 
 for order_id in orders:
     if order_id == "CANCELLED":
-        continue                  # skip this iteration, keep looping
+        continue     # skip THIS iteration and move to the next one
     if order_id == "ORD-004":
-        break                     # stop the loop entirely
+        break        # exit the loop entirely — nothing after this runs
     print(f"Processing {order_id}")
+# Processing ORD-001
+# Processing ORD-002
 ```
 
-Output:
-```
-Processing ORD-001
-Processing ORD-002
-```
+`continue` jumps to the next iteration. `break` ends the loop.
 
-### Step 6: The `while` loop
+### Concept: while loop
 
-`while` repeats as long as a condition is `True`:
+`while` repeats as long as a condition is `True`. Use it when you do not know in advance how many iterations you need:
 
 ```python
 retries = 0
@@ -210,8 +232,8 @@ success = False
 while not success and retries < max_retries:
     print(f"Attempt {retries + 1}: calling warehouse API...")
     retries += 1
-    if retries == 2:        # simulate success on attempt 2
-        success = True
+    if retries == 2:
+        success = True   # simulate success on attempt 2
 
 if success:
     print("Connected.")
@@ -219,9 +241,9 @@ else:
     print("Failed after 3 attempts.")
 ```
 
-Use `while` when you don't know in advance how many iterations you need. Use `for` when you're iterating over a known sequence.
+> Use `for` when iterating over a known sequence. Use `while` when the stop condition depends on something that changes during the loop.
 
-### Step 7: Run the full loop script
+### Step 1: Run the demo
 
 ```bash
 python3 src/02_loops.py
@@ -230,15 +252,23 @@ python3 src/02_loops.py
 Expected output:
 ```
 === Batch Processing 5 orders ===
-[1/5] ORD-001  pending     north   qty=2   → dispatched
-[2/5] ORD-002  cancelled   south   qty=1   → skipped
-[3/5] ORD-003  pending     west    qty=5   → dispatched
-[4/5] ORD-004  pending     north   qty=12  → dispatched
-[5/5] ORD-005  shipped     south   qty=3   → already shipped
+[1/5] ORD-001  pending    north   qty=2   → dispatched
+[2/5] ORD-002  cancelled  south   qty=1   → skipped
+[3/5] ORD-003  pending    west    qty=5   → dispatched
+[4/5] ORD-004  pending    north   qty=12  → dispatched
+[5/5] ORD-005  shipped    south   qty=3   → already shipped
 
 Dispatched : 3
 Skipped    : 1
 Archived   : 1
+```
+
+### Your turn — exercises
+
+Scroll to the `# YOUR TURN` section at the bottom of `src/02_loops.py`. Complete the four exercises there. Each one practises a different loop tool — work through them in order.
+
+```bash
+python3 src/02_loops.py
 ```
 
 ---
@@ -247,24 +277,26 @@ Archived   : 1
 
 **Goal:** Write functions that return values, handle edge cases with early returns, and understand where variables live.
 
-### Scope — where variables exist
+### Concept: scope — where variables exist
+
+Variables created inside a function are **local** — they only exist while that function is running and disappear when it returns. Variables at the top of a file are **module-level** — visible to all code in that file.
 
 ```python
-threshold = 100          # module-level variable — visible everywhere in this file
+threshold = 100          # module-level — visible everywhere in this file
 
 def check_stock(available):
-    message = "low stock"    # local variable — only exists inside check_stock
+    message = "low stock"    # local — only exists inside check_stock
     return available < threshold
 
 print(check_stock(50))   # True
 print(message)           # NameError — message doesn't exist here
 ```
 
-Variables created inside a function are **local** — they disappear when the function returns. Variables at the top of the file are **module-level** — visible to all functions in the file.
+The key rule: **functions can read module-level variables, but variables they create stay inside them.**
 
-### Early returns
+### Concept: early returns
 
-Return as soon as you have the answer. Avoid deep nesting:
+Return as soon as you have the answer. This keeps your code flat and readable:
 
 ```python
 # hard to read — three levels of nesting
@@ -274,7 +306,7 @@ def route_order(order):
             if order["warehouse"] in VALID_WAREHOUSES:
                 return order["warehouse"]
 
-# easier to read — early returns flatten the logic
+# easier to read — one guard per line, no nesting
 def route_order(order):
     if order["status"] != "pending":
         return None
@@ -285,9 +317,11 @@ def route_order(order):
     return order["warehouse"]
 ```
 
-### Multiple return values
+Each guard checks one condition and exits early on failure. The final `return` only runs when everything passed. This pattern is called **guard clauses**.
 
-Python functions can return more than one value — they come back as a tuple you can unpack:
+### Concept: multiple return values
+
+A function can return more than one value by separating them with a comma. Python packages them as a tuple, and you unpack them on the calling side:
 
 ```python
 def summarise_batch(orders):
@@ -303,14 +337,16 @@ def summarise_batch(orders):
             dispatched += 1
             total += order["quantity"] * order["unit_price"]
 
-    return dispatched, skipped, total   # returns a tuple
+    return dispatched, skipped, total   # three values, comma-separated
 
 
-dispatched, skipped, value = summarise_batch(orders)   # unpack immediately
+dispatched, skipped, value = summarise_batch(orders)   # unpack on one line
 print(f"Dispatched: {dispatched}, Skipped: {skipped}, Value: ${value:,.2f}")
 ```
 
-### Step 1: Run `src/03_functions.py`
+Unpack immediately at the call site — avoid indexing into the tuple later (`result[0]`, etc.).
+
+### Step 1: Run the demo
 
 ```bash
 python3 src/03_functions.py
@@ -331,15 +367,27 @@ Skipped    : 2 orders
 Batch value: $2,847.50
 ```
 
+### Your turn — exercises
+
+Scroll to the `# YOUR TURN` section at the bottom of `src/03_functions.py`. You will find two function stubs — `classify_order` and `batch_statistics` — with rules in their docstrings.
+
+The file already has three complete example functions above (`route_order`, `calculate_value`, `summarise_batch`). Read them carefully to understand the patterns, then implement the stubs.
+
+```bash
+python3 src/03_functions.py
+```
+
+The verification output at the bottom of the file shows the expected result.
+
 ---
 
 ## Challenge 4 — None and truthiness
 
 **Goal:** Understand Python's concept of "nothing" and how to write clean conditional checks.
 
-### `None` — the absence of a value
+### Concept: None — the absence of a value
 
-`None` is Python's way of saying "there is no value here". It is not zero. It is not an empty string. It is the explicit absence of a value.
+`None` is Python's way of saying "there is no value here". It is not zero. It is not an empty string. It is the **explicit absence** of a value.
 
 ```python
 draft_response = None      # no draft yet
@@ -350,9 +398,9 @@ else:
     print(f"draft ready: {draft_response}")
 ```
 
-Always use `is None` / `is not None` to check for None — not `== None`.
+**Always** use `is None` or `is not None` to check for None — not `== None`. The `is` operator checks identity (is this the exact `None` object?), not equality.
 
-### Truthiness — what counts as True or False
+### Concept: truthiness — what counts as True or False
 
 Python evaluates these as `False` in an `if` statement:
 
@@ -378,21 +426,26 @@ if not stock:
     print("out of stock")       # prints this — 0 is falsy
 ```
 
-### The trap: `if x` vs `if x is not None`
+### Concept: the trap — `if x` vs `if x is not None`
+
+This is the most common mistake when working with numeric values:
 
 ```python
 quantity = 0
 
-if quantity:                    # False — 0 is falsy
-    print("has quantity")       # never prints
+if quantity:                    # False — 0 is falsy, so this block is skipped
+    print("has quantity")
 
-if quantity is not None:        # True — 0 is not None
+if quantity is not None:        # True — 0 is not None, so this block runs
     print("quantity was set")   # prints this
 ```
 
-Use `if x is not None` when `0` or `""` are valid values you want to keep. Use `if x` when any falsy value should be treated as "nothing".
+`if quantity` treats `0` as "no value". `if quantity is not None` correctly treats `0` as a valid value that happens to be zero.
 
-### Step 1: Run `src/04_none_truthiness.py`
+**Use `if x is not None`** when `0` or `""` are valid values you want to keep.
+**Use `if x`** when any falsy value means "nothing useful is here".
+
+### Step 1: Run the demo
 
 ```bash
 python3 src/04_none_truthiness.py
@@ -411,60 +464,86 @@ Valid orders   : 2
 Invalid orders : 3
 ```
 
+### Your turn — exercises
+
+Scroll to the `# YOUR TURN` section at the bottom of `src/04_none_truthiness.py`. Complete two exercises:
+
+1. **Implement `validate_shipment()`** — same pattern as `validate_order()` above, applied to a different domain. The rules and hints are in the docstring.
+2. **Fix `buggy_validate()`** — three bugs related to None checks and truthiness. Identify each one and correct it.
+
+```bash
+python3 src/04_none_truthiness.py
+```
+
 ---
 
 ## Challenge 5 — Mini order processor
 
-**Goal:** Combine everything from this phase into a script that processes a full batch of orders and prints a report.
+**Goal:** Implement a complete order processing script using everything from this phase.
 
-This is the payoff. No new syntax — just everything working together.
+This is the capstone. There is no demo to run first — **you write everything**. The script processes a full batch of orders and prints a report.
 
-### What it does
+### What you will build
 
-1. Loops over a list of orders
-2. Validates each order (checks for missing fields, cancelled status, zero quantity)
-3. Routes valid orders to the correct warehouse
-4. Calculates the value of each dispatched order
-5. Prints a per-order log and an end-of-batch summary
+`src/05_order_processor.py` contains five function stubs with docstrings, hints, and the data already set up. The main script at the bottom calls your functions. Your output must match the expected output below.
 
-### Step 1: Run it
+### The five functions
+
+Work through them top to bottom — each one depends on the one before it:
+
+| Function | What it does |
+|---|---|
+| `validate_order(order)` | Returns `(True, None)` or `(False, reason)` |
+| `calculate_value(order, prices)` | Returns `unit_price × quantity` |
+| `process_order(order, prices)` | Validates, calculates, returns a result dict |
+| `process_batch(orders, prices)` | Loops over orders, returns list of result dicts |
+| `print_summary(results)` | Aggregates and prints the final report |
+
+### Step 1: Implement the functions
+
+Open `src/05_order_processor.py`. Read each docstring in full before writing any code for that function. The docstrings tell you the exact rules, the return shape, and where the tricky parts are.
 
 ```bash
 python3 src/05_order_processor.py
 ```
 
-Expected output:
+Run after each function. The output will be incomplete (or crash) until all five are done, but running early helps you catch mistakes.
+
+### Step 2: Verify your output
+
+When all five functions are implemented, your output should be:
+
 ```
 === Meridian Order Processor ===
 Processing batch of 8 orders...
 
-ORD-001  enterprise  north   TENT-3P-GRN      qty=2   $179.98   → dispatched
-ORD-002  pro         south   PACK-45L-BLK     qty=1   $149.99   → dispatched
-ORD-003  free        west    SLEEP-REG-BLU    qty=0   $0.00     → rejected (zero quantity)
-ORD-004  enterprise  north   JACKET-M-RED     qty=4   $599.96   → dispatched
-ORD-005  pro         —       BOOT-42-BRN      qty=2   —         → rejected (missing warehouse)
-ORD-006  free        west    TENT-3P-GRN      qty=1   $89.99    → dispatched
-ORD-007  enterprise  south   PACK-45L-BLK     qty=3   $449.97   → dispatched (cancelled order skipped)
-ORD-008  pro         north   SLEEP-REG-BLU    qty=6   $359.94   → dispatched
+ORD-001  enterprise   north   TENT-3P-GRN      qty=2  $179.98    → dispatched
+ORD-002  pro          south   PACK-45L-BLK     qty=1  $149.99    → dispatched
+ORD-003  free         west    SLEEP-REG-BLU    qty=0  —          → rejected (zero quantity)
+ORD-004  enterprise   north   JACKET-M-RED     qty=4  $599.96    → dispatched
+ORD-005  pro          —       BOOT-42-BRN      qty=2  —          → rejected (missing warehouse)
+ORD-006  free         west    TENT-3P-GRN      qty=1  $89.99     → dispatched
+ORD-007  enterprise   south   PACK-45L-BLK     qty=3  —          → rejected (cancelled)
+ORD-008  pro          north   SLEEP-REG-BLU    qty=6  $359.94    → dispatched
 
 === End of Batch Summary ===
 Total orders    : 8
-Dispatched      : 6
-Rejected        : 2
-Batch value     : $1,829.84
-By warehouse    : north=$779.94  south=$599.96  west=$449.98
-Fill rate       : 75.0%
+Dispatched      : 5
+Rejected        : 3
+Batch value     : $1,379.86
+By warehouse    : north=$779.94  south=$149.99  west=$89.99
+Fill rate       : 62.5%
 ```
 
-### Step 2: Trace through the code
+### Step 3: Trace through the code
 
-Open `src/05_order_processor.py` and follow one order through every function call:
+Once it works, trace one order through all five function calls manually. Follow `ORD-005` (the one with `warehouse=None`):
 
-1. `process_batch(orders)` — loops over orders, calls `process_order()` for each
-2. `process_order(order, prices)` — validates, routes, calculates value
-3. `validate_order(order)` — returns `(True, None)` or `(False, reason)`
-4. `calculate_value(order, prices)` — returns a float
-5. `print_summary(results)` — aggregates and formats the final report
+1. `process_batch(orders, PRICES)` — picks up ORD-005 in the loop
+2. `process_order(order, PRICES)` — calls validate_order
+3. `validate_order(order)` — which rule catches it? What does it return?
+4. Back in `process_order` — what does the result dict look like?
+5. `print_summary(results)` — does ORD-005 appear in dispatched or rejected?
 
 Every function does one thing. Each one is testable on its own. This is the pattern you will use in every phase from here on.
 
@@ -476,7 +555,7 @@ Every function does one thing. Each one is testable on its own. This is the patt
 |---|---|
 | Manual triage of every order | Every order classified in one loop |
 | "Is this order valid?" answered by a human | `validate_order()` answers it in microseconds |
-| Warehouse routing done from memory | `route_order()` applies the rules consistently |
+| Warehouse routing done from memory | `validate_order()` applies the rules consistently |
 | End-of-day summary built from a spreadsheet | `print_summary()` generates it from the processed data |
 
 The processor handles 8 orders here. In Phase 3 (Files) you will feed it real CSV data — thousands of rows, same code.
@@ -491,7 +570,7 @@ The processor handles 8 orders here. In Phase 3 (Files) you will feed it real CS
 - Use `zip()` to loop over two lists in parallel
 - `break` exits the loop; `continue` skips to the next iteration
 - Variables created inside a function are **local** — they don't leak out
-- Use **early returns** to flatten nested logic
+- Use **early returns** (guard clauses) to flatten nested logic
 - Functions can return multiple values — unpack them immediately
 - Use `is None` / `is not None` for None checks, never `== None`
 - Empty list, `0`, `""`, and `None` are all **falsy** — know when that matters
@@ -504,11 +583,12 @@ The processor handles 8 orders here. In Phase 3 (Files) you will feed it real CS
 phase-1-core-python/
 ├── README.md
 └── src/
-    ├── 01_control_flow.py     — Challenge 1: if/elif/else, logical operators
-    ├── 02_loops.py            — Challenge 2: for, while, break, continue, enumerate, zip
-    ├── 03_functions.py        — Challenge 3: scope, early returns, multiple return values
-    ├── 04_none_truthiness.py  — Challenge 4: None, is/is not, truthiness
-    └── 05_order_processor.py  — Challenge 5: full mini processor combining all concepts
+    ├── 01_control_flow.py      — demo: if/elif/else, logical operators
+    ├── 01_control_flow_test.py — exercises: implement four functions, asserts verify your work
+    ├── 02_loops.py             — demo + exercises: for, while, break, continue, enumerate, zip
+    ├── 03_functions.py         — demo + exercises: scope, early returns, multiple return values
+    ├── 04_none_truthiness.py   — demo + exercises: None, is/is not, truthiness
+    └── 05_order_processor.py   — capstone exercise: implement the full mini processor
 ```
 
 ---

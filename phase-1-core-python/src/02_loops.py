@@ -88,3 +88,82 @@ for order_id in batch:
         print(f"  Stop signal received — halting batch")
         break
     print(f"  {order_id} — processed")
+
+
+# ─── YOUR TURN ───────────────────────────────────────────────────────────────
+#
+# Four exercises below. Work through them in order.
+# Run `python3 src/02_loops.py` after each one to verify.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Exercise 1 — for loop + counter
+# --------------------------------
+# Loop over `ex1_orders` using a for loop.
+# Count how many have status "pending" using an if statement and a counter.
+# At the end, print: "Pending orders: 3"
+#
+# Do NOT use built-ins like sum() or list.count() — write the loop yourself.
+#
+# Expected output:
+#   Pending orders: 3
+
+ex1_orders = [
+    {"order_id": "A-001", "status": "pending"},
+    {"order_id": "A-002", "status": "cancelled"},
+    {"order_id": "A-003", "status": "pending"},
+    {"order_id": "A-004", "status": "shipped"},
+    {"order_id": "A-005", "status": "pending"},
+]
+
+# write your code here
+
+
+# Exercise 2 — enumerate()
+# -------------------------
+# Print each warehouse with a 1-based position number.
+# Use enumerate() — do not use range(len(...)).
+#
+# Expected output:
+#   1. north
+#   2. south
+#   3. west
+
+ex2_warehouses = ["north", "south", "west"]
+
+# write your code here
+
+
+# Exercise 3 — zip()
+# -------------------
+# Use zip() to print each SKU paired with its restock quantity.
+# Expected output:
+#   TENT-3P-GRN: restock 50 units
+#   PACK-45L-BLK: restock 30 units
+#   SLEEP-REG-BLU: restock 75 units
+
+ex3_skus            = ["TENT-3P-GRN", "PACK-45L-BLK", "SLEEP-REG-BLU"]
+ex3_restock_amounts = [50, 30, 75]
+
+# write your code here
+
+
+# Exercise 4 — while loop
+# ------------------------
+# Simulate polling for a shipment confirmation.
+# Rules:
+#   - Start: arrived=False, checks=0, max_checks=4
+#   - Each iteration: increment checks, print "Check N: not yet..."
+#   - On check 3: set arrived=True and break out of the loop
+#   - After the loop: print "Shipment confirmed." or "Shipment not found."
+#
+# Expected output:
+#   Check 1: not yet...
+#   Check 2: not yet...
+#   Check 3: not yet...
+#   Shipment confirmed.
+
+arrived    = False
+checks     = 0
+max_checks = 4
+
+# write your code here

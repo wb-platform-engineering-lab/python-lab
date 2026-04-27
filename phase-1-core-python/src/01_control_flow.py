@@ -31,7 +31,9 @@ quantity = order["quantity"]
 if tier == "enterprise" or tier == "pro":
     print(f"{tier} order: flag for priority handling")
 
-if not order["warehouse"] not in VALID_WAREHOUSES:
+if order["warehouse"] not in VALID_WAREHOUSES:
+    print(f"warning: unknown warehouse '{order['warehouse']}'")
+else:
     pass   # warehouse is valid — nothing to do
 
 # --- chained comparisons ---
@@ -64,3 +66,59 @@ for status, wh, qty in [
         print(f"  error — zero quantity")
         continue
     print(f"  route to {wh} (qty={qty})")
+
+
+# ─── YOUR TURN ───────────────────────────────────────────────────────────────
+#
+# Three exercises below. Write your code in the marked sections.
+# Run `python3 src/01_control_flow.py` after each exercise to verify.
+# Try writing from memory — look at the demo above only if you're stuck.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Exercise 1 — if/elif/else
+# --------------------------
+# Write an if/elif/else block for `ex1_tier` that prints:
+#   "priority queue"  when tier is "enterprise"
+#   "standard queue"  when tier is "pro"
+#   "self-service"    for any other tier
+#
+# Expected output:
+#   priority queue
+
+ex1_tier = "enterprise"
+
+# write your code here
+
+
+# Exercise 2 — Logical operators
+# --------------------------------
+# Using `ex2_tier` and `ex2_quantity`, write:
+#   a) An `if` with `and` that prints "bulk enterprise — escalate" only
+#      when tier is "enterprise" AND quantity is greater than 10.
+#   b) An `if` with `or` that prints "paid customer" when tier is
+#      "enterprise" or "pro".
+#
+# Expected output:
+#   bulk enterprise — escalate
+#   paid customer
+
+ex2_tier     = "enterprise"
+ex2_quantity = 15
+
+# write your code here
+
+
+# Exercise 3 — Ternary expression + chained comparison
+# -----------------------------------------------------
+# a) Use a ternary expression to set `urgency` to "urgent" if
+#    ex3_quantity > 10, else "normal". Print: f"urgency: {urgency}"
+# b) Use a chained comparison to check if ex3_quantity is between
+#    1 and 20 inclusive. If True, print "standard pallet".
+#
+# Expected output:
+#   urgency: urgent
+#   standard pallet
+
+ex3_quantity = 15
+
+# write your code here
